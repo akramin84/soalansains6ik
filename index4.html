@@ -1,0 +1,36 @@
+function onFormSubmit(e) {
+  // MAKLUMAT TELEGRAM ANDA
+  var token = "8825456874:AAGb3Owl7HNJ1m0rP5fkMJnsQDKFkn8rj3I";
+  var chatId = "6087514961";
+  
+  // Mengambil respon terkini
+  var response = e.response;
+  var itemResponses = response.getItemResponses();
+  
+  // Mengambil nama murid (Pastikan Soalan 1 di Google Form ialah "Nama Murid")
+  var namaMurid = itemResponses[0].getResponse();
+  
+  // Mengambil markah (Pastikan fungsi "Quiz" diaktifkan di Google Form)
+  var score = response.getGradingResult().getPointsScore();
+  var maxScore = response.getGradingResult().getPointsToAssign();
+  
+  // Mesej yang akan dihantar ke Telegram
+  var message = "📊 *KUIZ SAINS TAHUN 6*\n\n" +
+                "👤 *Nama Murid:* " + namaMurid + "\n" +
+                "💯 *Markah:* " + score + " / " + maxScore + "\n" +
+                "🕒 *Masa:* " + new Date().toLocaleString("ms-MY");
+  
+  // Menghantar data ke Telegram API
+  var url = "https://api.telegram.org/bot" + token + "/sendMessage";
+  var payload = {
+    "method": "post",
+    "contentType": "application/json",
+    "payload": JSON.stringify({
+      "chat_id": chatId,
+      "text": message,
+      "parse_mode": "Markdown"
+    })
+  };
+  
+  UrlFetchApp.fetch(url, payload);
+}
